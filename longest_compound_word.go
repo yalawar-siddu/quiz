@@ -93,8 +93,11 @@ func main() {
 		/* Add word into a HashMap data structure */
 		wordMap[len(scanner.Text())] = scanner.Text()
 	}
-
-	isValidCompundWord("dichlorodiphenyltrichloroethanes")
+	
+	/*
+	 * This was added earlier for testing purpose only
+	 * isValidCompundWord("dichlorodiphenyltrichloroethanes")
+	 */
 	/*
 	 * Create Integer Array with Keys of Length of words
 	 * Then Sort that list
