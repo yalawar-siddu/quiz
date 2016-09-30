@@ -37,7 +37,7 @@ func isValidCompundWord(word string) {
 		_, ok := lcwCtrie.Lookup([]byte(wordPrefix))
 		if ok {
 			if lcwDebug {
-				fmt.Println("Prefix is : ", wordPrefix, "   i: ", i)
+				fmt.Println("Prefix is : ", wordPrefix)
 			}
 			lcwOutputWord += wordPrefix
 			lcwSubWords +=  " " + wordPrefix
