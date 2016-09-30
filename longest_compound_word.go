@@ -17,6 +17,7 @@ import (
 	"os"
 	"sort"
 	"time"
+	"strings"
 
 	"github.com/Workiva/go-datastructures/trie/ctrie"
 )
@@ -33,11 +34,10 @@ func isValidCompundWord(word string) {
 	for i := 0; (lcwNotFound) && (i < (wordLen - 1)); i++ {
 		wordPrefix := word[0 : i+1]
 		wordSuffix := word[i+1 : wordLen]
-		/* fmt.Println("P: ", wordPrefix, " S: ", wordSuffix) */
 		_, ok := lcwCtrie.Lookup([]byte(wordPrefix))
 		if ok {
 			if lcwDebug {
-				fmt.Println("Prefix is : ", wordPrefix)
+				fmt.Println("Prefix is : ", wordPrefix, "   i: ", i)
 			}
 			lcwOutputWord += wordPrefix
 			lcwSubWords +=  " " + wordPrefix
@@ -60,6 +60,8 @@ func isValidCompundWord(word string) {
 			}
 			if lcwNotFound {
 				isValidCompundWord(wordSuffix)
+				lcwOutputWord = strings.TrimSuffix(lcwOutputWord, wordPrefix)
+				lcwSubWords = strings.TrimSuffix(lcwSubWords, " " + wordPrefix)
 			}
 		}
 	}
@@ -93,11 +95,7 @@ func main() {
 		/* Add word into a HashMap data structure */
 		wordMap[len(scanner.Text())] = scanner.Text()
 	}
-	
-	/*
-	 * This was added earlier for testing purpose only
-	 * isValidCompundWord("dichlorodiphenyltrichloroethanes")
-	 */
+
 	/*
 	 * Create Integer Array with Keys of Length of words
 	 * Then Sort that list
@@ -114,7 +112,7 @@ func main() {
 		lcwOutputWord = ""
 		lcwSubWords = ""
 		if lcwDebug {
-			fmt.Println("Key:", k, "Value:", wordMap[k])
+			fmt.Println("\n\nKey:", k, "Value:", wordMap[k], "\n")
 		}
 		isValidCompundWord(wordMap[k])
 		if !lcwNotFound {

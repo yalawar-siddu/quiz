@@ -28,11 +28,11 @@ Note:  I assume you have the complete set up for running Go programs.
    ------------------------------------------------------------------------------
    You would see output something like below
 
-   LongestCompundWord:  ethylenediaminetetaminetetettetraacetates
+   LongestCompundWord:  ethylenediaminetetraacetates
 
-   Length:  41
+   Length:  28
 
-   lcwSubWords are:   et hyle ne di am in et et ami ne te tet tetra acetates
+   lcwSubWords are:   et hyle ne di ami ne tetra acetates
 
    Total Time taken 1.9571119s
    ------------------------------------------------------------------------------
