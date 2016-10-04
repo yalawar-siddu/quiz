@@ -1,0 +1,131 @@
+/*
+ * Longest Compound Word.
+ * Given a list of words like
+ * https://github.com/NodePrime/quiz/blob/master/word.list find
+ * the longest compound-word in the list, which is also a
+ * concatenation of other sub-words that exist in the list.
+ *
+ * Usage "go run <program-name> <path-to-input-file>"
+ *       Input file should contain list of words at each line
+ */
+
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"sort"
+	"time"
+	"strings"
+
+	"github.com/Workiva/go-datastructures/trie/ctrie"
+)
+
+const lcwDebug = false
+
+var lcwCtrie *ctrie.Ctrie
+var lcwOutputWord string
+var lcwSubWords string
+var lcwNotFound bool = true
+
+func isValidCompundWord(word string) {
+	wordLen := len(word)
+	for i := 0; (lcwNotFound) && (i < (wordLen - 1)); i++ {
+		wordPrefix := word[0 : i+1]
+		wordSuffix := word[i+1 : wordLen]
+		_, ok := lcwCtrie.Lookup([]byte(wordPrefix))
+		if ok {
+			if lcwDebug {
+				fmt.Println("Prefix is : ", wordPrefix)
+			}
+			lcwOutputWord += wordPrefix
+			lcwSubWords +=  " " + wordPrefix
+			_, ok = lcwCtrie.Lookup([]byte(wordSuffix))
+			if ok {
+				if lcwDebug {
+					fmt.Println("Suffix  is : ", wordSuffix)
+				}
+				lcwOutputWord += wordSuffix
+				lcwSubWords += " " + wordSuffix
+				fmt.Println("")
+				fmt.Println("LongestCompundWord: ", lcwOutputWord)
+				fmt.Println("")
+				fmt.Println("Length: ", len(lcwOutputWord))
+				fmt.Println("")
+				fmt.Println("lcwSubWords are: ", lcwSubWords)
+				lcwOutputWord = ""
+				lcwNotFound = false
+				break
+			}
+			if lcwNotFound {
+				isValidCompundWord(wordSuffix)
+				lcwOutputWord = strings.TrimSuffix(lcwOutputWord, wordPrefix)
+				lcwSubWords = strings.TrimSuffix(lcwSubWords, " " + wordPrefix)
+			}
+		}
+	}
+}
+
+func main() {
+	if len(os.Args) < 2 {
+		fmt.Println("\nUsage: go run <program> <path-to-input-file>")
+		return;
+	}
+	start := time.Now()
+	/* Initialize ctrie instance */
+	lcwCtrie = ctrie.New(nil)
+
+	/* Open file for reading */
+	inputFile, err := os.Open(os.Args[1])
+	if err != nil {
+		panic(err)
+	}
+
+	/*
+	 * Read all words from the file
+	 */
+	var wordMap map[string]int
+	wordMap = make(map[string]int)
+	scanner := bufio.NewScanner(inputFile)
+	for scanner.Scan() {
+		/* Add word into a Trie data structure */
+		lcwCtrie.Insert([]byte(scanner.Text()), nil)
+
+		/* Add word into a HashMap data structure */
+		wordMap[scanner.Text()] = len(scanner.Text())
+	}
+
+	/*
+	 * Create Integer Array with Keys of Length of words
+	 * Then Sort that list
+	 */
+	var wordMapKeys []int
+	wordMap2 := map[int][]string{}
+	for k, v := range wordMap {
+		wordMap2[v] = append(wordMap2[v], k)
+	}
+	for k := range wordMap2 {
+        wordMapKeys = append(wordMapKeys, k)
+    }
+	sort.Sort(sort.Reverse(sort.IntSlice(wordMapKeys)))
+	for _, k := range wordMapKeys {
+		for _, v := range wordMap2[k] {
+			lcwOutputWord = ""
+			lcwSubWords = ""
+			if lcwDebug {
+				fmt.Println("\n\nKey:", k, "Value:", v, "\n")
+			}
+			isValidCompundWord(v)
+			if !lcwNotFound {
+				break
+			}
+		}
+	}
+
+    elapsed := time.Since(start)
+	if lcwNotFound {
+		fmt.Println("\nNo Longest Compound Word found !!!")
+	}
+    fmt.Println("\nTotal Time taken", elapsed)
+}
