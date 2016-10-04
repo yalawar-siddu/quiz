@@ -85,15 +85,15 @@ func main() {
 	/*
 	 * Read all words from the file
 	 */
-	var wordMap map[int]string
-	wordMap = make(map[int]string)
+	var wordMap map[string]int
+	wordMap = make(map[string]int)
 	scanner := bufio.NewScanner(inputFile)
 	for scanner.Scan() {
 		/* Add word into a Trie data structure */
 		lcwCtrie.Insert([]byte(scanner.Text()), nil)
 
 		/* Add word into a HashMap data structure */
-		wordMap[len(scanner.Text())] = scanner.Text()
+		wordMap[scanner.Text()] = len(scanner.Text())
 	}
 
 	/*
@@ -101,22 +101,25 @@ func main() {
 	 * Then Sort that list
 	 */
 	var wordMapKeys []int
-	for k := range wordMap {
-		wordMapKeys = append(wordMapKeys, k)
+	wordMap2 := map[int][]string{}
+	for k, v := range wordMap {
+		wordMap2[v] = append(wordMap2[v], k)
 	}
-	/*
-	 * Do sort the array in Reverse Order
-	 */
+	for k := range wordMap2 {
+        wordMapKeys = append(wordMapKeys, k)
+    }
 	sort.Sort(sort.Reverse(sort.IntSlice(wordMapKeys)))
 	for _, k := range wordMapKeys {
-		lcwOutputWord = ""
-		lcwSubWords = ""
-		if lcwDebug {
-			fmt.Println("\n\nKey:", k, "Value:", wordMap[k], "\n")
-		}
-		isValidCompundWord(wordMap[k])
-		if !lcwNotFound {
-			break
+		for _, v := range wordMap2[k] {
+			lcwOutputWord = ""
+			lcwSubWords = ""
+			if lcwDebug {
+				fmt.Println("\n\nKey:", k, "Value:", v, "\n")
+			}
+			isValidCompundWord(v)
+			if !lcwNotFound {
+				break
+			}
 		}
 	}
 

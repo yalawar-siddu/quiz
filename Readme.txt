@@ -28,11 +28,11 @@ Note:  I assume you have the complete set up for running Go programs.
    ------------------------------------------------------------------------------
    You would see output something like below
 
-   LongestCompundWord:  ethylenediaminetetraacetates
+   LongestCompundWord:  antidisestablishmentarianisms
 
-   Length:  28
+   Length:  29
 
-   lcwSubWords are:   et hyle ne di ami ne tetra acetates
+   lcwSubWords are:   an ti dis establishmentarianisms
 
    Total Time taken 1.9571119s
    ------------------------------------------------------------------------------
